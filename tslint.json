@@ -35,6 +35,7 @@
     "no-use-before-declare": true,
     "no-var-requires": false,
     "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
     "object-literal-key-quotes": [true, "as-needed"],
     "object-literal-sort-keys": false,
     "ordered-imports": false,

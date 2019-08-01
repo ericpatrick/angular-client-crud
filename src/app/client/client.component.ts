@@ -1,4 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Client } from "./models";
+import { ClientService } from "./services/client.service";
+import { MatTableDataSource, MatPaginator } from "@angular/material";
 
 export interface PeriodicElement {
   name: string;
@@ -26,9 +29,20 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ["./client.component.scss"]
 })
 export class ClientComponent implements OnInit {
-  displayedColumns: string[] = ["position", "name", "weight", "symbol"];
-  dataSource = ELEMENT_DATA;
-  constructor() {}
+  displayedColumns: string[] = ["name", "actions"];
+  dataSource: MatTableDataSource<Client>;
 
-  ngOnInit() {}
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  public clients: Client[];
+
+  constructor(private clientService: ClientService) {
+    this.clients = clientService.getAll();
+    this.dataSource = new MatTableDataSource<Client>(this.clients);
+    console.log("=====", this.clients);
+  }
+
+  ngOnInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 }
