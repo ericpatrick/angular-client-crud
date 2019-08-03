@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ClientService } from "../../services/client.service";
-import { Client, VehicleAPI, Vehicle, VehicleModelAPI, VehicleInfo } from "../../models";
+import { Client, VehicleInfo } from "../../models";
 import { MaskEvent } from "@emerbrito/input-mask";
 import * as moment from "moment";
 import { FormControl, Validators } from "@angular/forms";
@@ -10,6 +10,8 @@ import { MatSelectChange, MatAutocompleteSelectedEvent } from "@angular/material
 import { VehicleService } from "../../services/vehicle.service";
 import { Observable } from "rxjs";
 import { startWith, map } from "rxjs/operators";
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-client-form",
@@ -17,6 +19,9 @@ import { startWith, map } from "rxjs/operators";
   styleUrls: ["./client-form.component.scss"]
 })
 export class ClientFormComponent implements OnInit {
+  @ViewChild("manufecturerInput") manufecturerInput: ElementRef;
+  @ViewChild("modelInput") modelInput: ElementRef;
+
   public client: Client;
   public paramsForm = {
     name: new FormControl("", [Validators.required]),
@@ -35,8 +40,6 @@ export class ClientFormComponent implements OnInit {
     { label: "Caminhão", value: "caminhoes" }
   ];
 
-  public vehicleSelected: Vehicle;
-
   public showVehicleManufacturer: boolean;
   public vehicleManufacturers: VehicleInfo[];
   public manufacturersInputControl = new FormControl();
@@ -49,24 +52,45 @@ export class ClientFormComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private clientService: ClientService,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService
   ) {
     this.route.params.subscribe((res) => {
-      this.client = res.id
-        ? (this.client = this.clientService.get(res.id))
-        : (this.client = new Client());
+      if (res.id) {
+        this.client = this.clientService.get(res.id);
+        const { type, manufacturer } = this.client.vehicle;
+        const manufecturersPromise = this.vehicleService.getManufacturers(type).toPromise();
+        const modelsPromise = this.vehicleService.getModels(type, manufacturer.cod).toPromise();
+        this.spinner.show();
+        Promise.all([manufecturersPromise, modelsPromise]).then((resp) => {
+          this.vehicleManufacturers = resp[0];
+          this.vehicleModels = resp[1];
+          this.showVehicleManufacturer = true;
+          this.showVehicleModels = true;
+          this.spinner.hide();
+        });
+      } else {
+        this.client = new Client();
+      }
     });
-
-    this.vehicleSelected = new Vehicle();
   }
 
   ngOnInit() {
+    this.loadFilteredManufecturer();
+    this.loadFilteredModels();
+  }
+
+  private loadFilteredManufecturer(): void {
     this.filteredVehicleManufecturers = this.manufacturersInputControl.valueChanges.pipe(
       startWith(""),
       map((value) => this.filterAutoCompleteOpts(value, this.vehicleManufacturers))
     );
+  }
 
+  private loadFilteredModels(): void {
     this.filteredVehicleModels = this.modelsInputControl.valueChanges.pipe(
       startWith(""),
       map((value) => this.filterAutoCompleteOpts(value, this.vehicleModels))
@@ -82,7 +106,13 @@ export class ClientFormComponent implements OnInit {
   }
 
   public submitForm(): void {
-    console.log(this.client);
+    if (this.client.id) {
+      this.clientService.update(this.client);
+    } else {
+      this.clientService.add(this.client);
+    }
+    this.toastr.success("Cliente cadastrado com sucesso");
+    this.router.navigate(["/"]);
   }
 
   public onFormat(event: MaskEvent, key: string): void {
@@ -90,12 +120,10 @@ export class ClientFormComponent implements OnInit {
   }
 
   public onBirthdayFormat(event: MaskEvent): void {
-    const { value } = event;
     this.client.birthday = event.value;
   }
 
-  public cpfValidator(control: FormControl) {
-    // return null;
+  public cpfValidator(control: FormControl): any {
     const cpf = control.value;
     if (Utils.isValidCPF(cpf)) {
       return null;
@@ -106,8 +134,7 @@ export class ClientFormComponent implements OnInit {
     }
   }
 
-  public phoneValidator(control: FormControl) {
-    // return null;
+  public phoneValidator(control: FormControl): any {
     const phone = control.value;
     if (phone.length === 13) {
       return null;
@@ -119,7 +146,7 @@ export class ClientFormComponent implements OnInit {
   }
 
   public isValidForm(): boolean {
-    const { name, cpf, phone, birthday, address } = this.client;
+    const { name, cpf, phone, birthday, address, vehicle } = this.client;
     if (!name) {
       return false;
     }
@@ -140,32 +167,77 @@ export class ClientFormComponent implements OnInit {
       return false;
     }
 
+    if (!vehicle.model) {
+      return false;
+    }
+
     return true;
   }
 
-  public selectVehicleType(ev: MatSelectChange) {
-    this.vehicleSelected.type = ev.value;
-    this.vehicleService.getManufacturers(ev.value).subscribe((resp) => {
-      this.vehicleManufacturers = resp;
-      this.showVehicleManufacturer = true;
-    });
+  public selectVehicleType(ev: MatSelectChange): void {
+    this.showVehicleModels = false;
+    const { vehicle } = this.client;
+    vehicle.type = ev.value;
+    vehicle.manufacturer = null;
+    vehicle.model = null;
+    if (this.manufecturerInput) {
+      this.manufecturerInput.nativeElement.value = "";
+    }
+    if (this.modelInput) {
+      this.modelInput.nativeElement.value = "";
+    }
+
+    this.spinner.show();
+    this.vehicleService.getManufacturers(ev.value).subscribe(
+      (resp) => {
+        this.vehicleManufacturers = resp;
+        this.showVehicleManufacturer = true;
+        this.loadFilteredManufecturer();
+        this.spinner.hide();
+      },
+      () => {
+        this.spinner.hide();
+        this.toastr.error("Erro ao carregar dados de fabricantes.");
+      }
+    );
   }
 
-  public displayInfo(item: VehicleInfo): string {
-    return item ? item.name : undefined;
+  public displayInfo(
+    prop: "manufacturer" | "model"
+  ): (a: VehicleInfo, b: ClientFormComponent) => string {
+    const self = this;
+    const displayFn = (item: VehicleInfo, scope = self) => {
+      const { vehicle } = scope.client;
+      return item ? item.name : vehicle[prop] ? vehicle[prop].name : undefined;
+    };
+    return displayFn;
   }
 
   public vehicleManufacturerSelected(event: MatAutocompleteSelectedEvent): void {
-    console.log(event);
-    this.vehicleSelected.manufacturer = event.option.value as VehicleInfo;
-    const { type, manufacturer } = this.vehicleSelected;
-    this.vehicleService.getModels(type, manufacturer.cod).subscribe((resp) => {
-      this.vehicleModels = resp;
-      this.showVehicleModels = true;
-    });
+    const { vehicle } = this.client;
+    vehicle.manufacturer = event.option.value as VehicleInfo;
+    vehicle.model = null;
+    if (this.modelInput) {
+      this.modelInput.nativeElement.value = "";
+    }
+
+    const { type, manufacturer } = vehicle;
+    this.spinner.show();
+    this.vehicleService.getModels(type, manufacturer.cod).subscribe(
+      (resp) => {
+        this.vehicleModels = resp;
+        this.showVehicleModels = true;
+        this.loadFilteredModels();
+        this.spinner.hide();
+      },
+      () => {
+        this.toastr.error("Erro ao carregar dados de modelos.");
+        this.spinner.hide();
+      }
+    );
   }
 
   public vehicleModelSelected(event: MatAutocompleteSelectedEvent): void {
-    this.vehicleSelected.model = event.option.value as VehicleInfo;
+    this.client.vehicle.model = event.option.value as VehicleInfo;
   }
 }

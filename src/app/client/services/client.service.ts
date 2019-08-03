@@ -12,8 +12,12 @@ export class ClientService {
     return this.localStorageManager.getAll();
   }
 
-  public get(client: Client): Client {
-    return this.localStorageManager.get(client.id);
+  public get(id: string): Client {
+    return this.localStorageManager.get(id);
+  }
+
+  public add(client: Client): Client {
+    return this.localStorageManager.add(client);
   }
 
   public update(client: Client): Client {

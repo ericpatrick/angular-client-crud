@@ -1,4 +1,6 @@
-<section fxLayout="column">
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="small" color="#fff" type="ball-clip-rotate" size="default">
+</ngx-spinner>
+<section *ngIf="!!client" fxLayout="column">
   <mat-form-field>
     <mat-label>Nome</mat-label>
     <input matInput [(ngModel)]="client.name" [formControl]="paramsForm.name">
@@ -50,7 +52,7 @@
 
   <mat-form-field>
     <mat-label>Tipo do Veículo</mat-label>
-    <mat-select (selectionChange)="selectVehicleType($event)">
+    <mat-select (selectionChange)="selectVehicleType($event)" [value]="client.vehicle.type">
       <mat-option *ngFor="let option of vehicleTypeOptions" [value]="option.value">
         {{option.label}}
       </mat-option>
@@ -58,10 +60,10 @@
   </mat-form-field>
 
   <mat-form-field *ngIf="showVehicleManufacturer">
-    <input type="text" placeholder="Fabricante" aria-label="Cliente" matInput
+    <input #manufecturerInput type="text" placeholder="Fabricante" aria-label="Cliente" matInput
       [matAutocomplete]="manufacturers" [formControl]="manufacturersInputControl">
     <mat-autocomplete #manufacturers="matAutocomplete" (optionSelected)="vehicleManufacturerSelected($event)"
-      [displayWith]="displayInfo">
+      [displayWith]="displayInfo('manufacturer')">
       <mat-option *ngFor="let manufacturer of filteredVehicleManufecturers | async" [value]="manufacturer">
         {{manufacturer.name}}
       </mat-option>
@@ -69,17 +71,17 @@
   </mat-form-field>
 
   <mat-form-field *ngIf="showVehicleModels">
-    <input type="text" placeholder="Cliente" aria-label="Modelos" matInput
+    <input #modelInput type="text" placeholder="Modelo" aria-label="Modelos" matInput
       [matAutocomplete]="models" [formControl]="modelsInputControl">
     <mat-autocomplete #models="matAutocomplete" (optionSelected)="vehicleModelSelected($event)"
-      [displayWith]="displayInfo">
+      [displayWith]="displayInfo('model')">
       <mat-option *ngFor="let model of filteredVehicleModels | async" [value]="model">
         {{model.name}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 
-  <button mat-raised-button color="accent" (click)="submitForm()">
+  <button mat-raised-button color="accent" (click)="submitForm()" [disabled]="!isValidForm()">
     <span>Salvar</span>
   </button>
 </section>

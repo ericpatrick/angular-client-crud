@@ -17,6 +17,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { TextMaskModule } from "angular2-text-mask";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { InputMaskModule } from "@emerbrito/input-mask";
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [],
@@ -37,7 +38,8 @@ import { InputMaskModule } from "@emerbrito/input-mask";
     InputMaskModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    NgxSpinnerModule
   ],
   exports: [
     MatToolbarModule,
@@ -55,7 +57,8 @@ import { InputMaskModule } from "@emerbrito/input-mask";
     InputMaskModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    NgxSpinnerModule
   ]
 })
 export class SharedModule {}
