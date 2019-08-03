@@ -39,7 +39,6 @@ export class ClientComponent implements OnInit {
   constructor(private clientService: ClientService) {
     this.clients = clientService.getAll();
     this.dataSource = new MatTableDataSource<Client>(this.clients);
-    console.log("=====", this.clients);
   }
 
   ngOnInit() {

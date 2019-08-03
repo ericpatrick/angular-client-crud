@@ -6,9 +6,17 @@ import {
   MatPaginatorModule,
   MatCardModule,
   MatIconModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatButtonModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatAutocompleteModule
 } from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { TextMaskModule } from "angular2-text-mask";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { InputMaskModule } from "@emerbrito/input-mask";
 
 @NgModule({
   declarations: [],
@@ -20,7 +28,16 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatPaginatorModule,
     MatCardModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    TextMaskModule,
+    FormsModule,
+    InputMaskModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatToolbarModule,
@@ -29,7 +46,16 @@ import { FlexLayoutModule } from "@angular/flex-layout";
     MatPaginatorModule,
     MatCardModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    TextMaskModule,
+    FormsModule,
+    InputMaskModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatAutocompleteModule
   ]
 })
 export class SharedModule {}

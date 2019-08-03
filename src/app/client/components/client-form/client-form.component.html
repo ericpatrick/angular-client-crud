@@ -1,0 +1,73 @@
+<section fxLayout="column">
+  <mat-form-field>
+    <mat-label>Nome</mat-label>
+    <input matInput [(ngModel)]="client.name" [formControl]="paramsForm.name">
+    <mat-error *ngIf="paramsForm.name.hasError('required')">
+      Campo obrigatório
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>CPF</mat-label>
+    <input matInput inputMask mask="999.999.999-99" [value]="client.cpf" (format)="onFormat($event, 'cpf')" [formControl]="paramsForm.cpf">
+    <mat-error *ngIf="paramsForm.cpf.hasError('required')">
+      Campo obrigatório
+    </mat-error>
+    <mat-error *ngIf="paramsForm.cpf.hasError('cpf')">
+      Cpf Inválido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Telefone</mat-label>
+    <input matInput inputMask mask="(99) 999-9999" [value]="client.phone" (format)="onFormat($event, 'phone')" [formControl]="paramsForm.phone">
+    <mat-error *ngIf="paramsForm.phone.hasError('required')">
+      Campo obrigatório
+    </mat-error>
+    <mat-error *ngIf="paramsForm.phone.hasError('inputMaskParse')">
+      Telefone inválido
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Data de Nascimento</mat-label>
+    <input matInput inputMask mask="99/99/9999" [value]="client.birthday" (format)="onBirthdayFormat($event)" [formControl]="paramsForm.birthday">
+    <mat-error *ngIf="paramsForm.birthday.hasError('required')">
+      Campo obrigatório
+    </mat-error>
+    <mat-error *ngIf="paramsForm.phone.hasError('inputMaskParse')">
+      Data inválida
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Endereço</mat-label>
+    <input matInput [(ngModel)]="client.address" [formControl]="paramsForm.address">
+    <mat-error *ngIf="paramsForm.address.hasError('required')">
+      Campo obrigatório
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Tipo do Veículo</mat-label>
+    <mat-select (selectionChange)="selectVehicleType($event)">
+      <mat-option *ngFor="let option of vehicleTypeOptions" [value]="option.value">
+        {{option.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="showVehicleManufacturer">
+    <input type="text" placeholder="Cliente" aria-label="Cliente" matInput
+      [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClient()" (optionSelected)="clientSelected($event)">
+      <mat-option *ngFor="let client of filterdSellerClients | async" [value]="client">
+        {{client.client_id}} - {{client.client}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button mat-raised-button color="accent" (click)="submitForm()">
+    <span>Salvar</span>
+  </button>
+</section>
