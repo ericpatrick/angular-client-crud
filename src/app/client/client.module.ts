@@ -7,10 +7,11 @@ import { SharedModule } from "../shared/shared.module";
 import { ClientService } from "./services/client.service";
 import { LocalSorageDataManagerService } from "./services/local-sorage-data-manager.service";
 import { ClientFormComponent } from "./components/client-form/client-form.component";
+import { VehicleService } from "./services/vehicle.service";
 
 @NgModule({
   declarations: [ClientComponent, ClientFormComponent],
   imports: [CommonModule, ClientRoutingModule, SharedModule],
-  providers: [ClientService, LocalSorageDataManagerService]
+  providers: [ClientService, LocalSorageDataManagerService, VehicleService]
 })
 export class ClientModule {}

@@ -58,11 +58,23 @@
   </mat-form-field>
 
   <mat-form-field *ngIf="showVehicleManufacturer">
-    <input type="text" placeholder="Cliente" aria-label="Cliente" matInput
-      [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClient()" (optionSelected)="clientSelected($event)">
-      <mat-option *ngFor="let client of filterdSellerClients | async" [value]="client">
-        {{client.client_id}} - {{client.client}}
+    <input type="text" placeholder="Fabricante" aria-label="Cliente" matInput
+      [matAutocomplete]="manufacturers" [formControl]="manufacturersInputControl">
+    <mat-autocomplete #manufacturers="matAutocomplete" (optionSelected)="vehicleManufacturerSelected($event)"
+      [displayWith]="displayInfo">
+      <mat-option *ngFor="let manufacturer of filteredVehicleManufecturers | async" [value]="manufacturer">
+        {{manufacturer.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="showVehicleModels">
+    <input type="text" placeholder="Cliente" aria-label="Modelos" matInput
+      [matAutocomplete]="models" [formControl]="modelsInputControl">
+    <mat-autocomplete #models="matAutocomplete" (optionSelected)="vehicleModelSelected($event)"
+      [displayWith]="displayInfo">
+      <mat-option *ngFor="let model of filteredVehicleModels | async" [value]="model">
+        {{model.name}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

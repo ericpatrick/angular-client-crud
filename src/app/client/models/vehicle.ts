@@ -1,7 +1,7 @@
 export class Vehicle {
-  public type: string;
-  public manufacturer: string;
-  public model: string;
+  public type: VehicleType;
+  public manufacturer: VehicleInfo;
+  public model: VehicleInfo;
 }
 
 export interface VehicleAPI {
@@ -12,6 +12,16 @@ export interface VehicleAPI {
 export interface VehicleModelAPI {
   modelos: VehicleAPI[];
   anos: VehicleAPI[];
+}
+
+export class VehicleInfo {
+  public name: string;
+  public cod: string;
+
+  constructor(info: VehicleAPI) {
+    this.name = info.nome;
+    this.cod = info.codigo;
+  }
 }
 
 export type VehicleType = "motos" | "carros" | "caminhoes";
