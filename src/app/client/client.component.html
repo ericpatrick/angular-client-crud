@@ -15,10 +15,10 @@
         <mat-icon matTooltip="Adicionar">add</mat-icon><span>Adicionar</span>
       </button>
     </article> -->
-      <article *ngIf="clients.length == 0">
+      <article *ngIf="clients.length === 0">
         <mat-card>Você não possui clientes cadastrados.</mat-card>
       </article>
-      <article class="mat-elevation-z8">
+      <article class="mat-elevation-z8" *ngIf="clients.length > 0">
       <table
         mat-table
         [dataSource]="dataSource"
