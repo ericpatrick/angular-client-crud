@@ -11,16 +11,18 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatSelectModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatDialogModule
 } from "@angular/material";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { TextMaskModule } from "angular2-text-mask";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { InputMaskModule } from "@emerbrito/input-mask";
 import { NgxSpinnerModule } from "ngx-spinner";
+import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 
 @NgModule({
-  declarations: [],
+  declarations: [ConfirmationDialogComponent],
   imports: [
     CommonModule,
     MatToolbarModule,
@@ -39,8 +41,10 @@ import { NgxSpinnerModule } from "ngx-spinner";
     ReactiveFormsModule,
     MatSelectModule,
     MatAutocompleteModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatDialogModule
   ],
+  entryComponents: [ConfirmationDialogComponent],
   exports: [
     MatToolbarModule,
     MatTableModule,
@@ -58,7 +62,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
     ReactiveFormsModule,
     MatSelectModule,
     MatAutocompleteModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ConfirmationDialogComponent
   ]
 })
 export class SharedModule {}

@@ -1,27 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Client } from "./models";
 import { ClientService } from "./services/client.service";
-import { MatTableDataSource, MatPaginator } from "@angular/material";
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: "Hydrogen", weight: 1.0079, symbol: "H" },
-  { position: 2, name: "Helium", weight: 4.0026, symbol: "He" },
-  { position: 3, name: "Lithium", weight: 6.941, symbol: "Li" },
-  { position: 4, name: "Beryllium", weight: 9.0122, symbol: "Be" },
-  { position: 5, name: "Boron", weight: 10.811, symbol: "B" },
-  { position: 6, name: "Carbon", weight: 12.0107, symbol: "C" },
-  { position: 7, name: "Nitrogen", weight: 14.0067, symbol: "N" },
-  { position: 8, name: "Oxygen", weight: 15.9994, symbol: "O" },
-  { position: 9, name: "Fluorine", weight: 18.9984, symbol: "F" },
-  { position: 10, name: "Neon", weight: 20.1797, symbol: "Ne" }
-];
+import { MatTableDataSource, MatPaginator, MatDialog } from "@angular/material";
+import { ConfirmationData } from "../shared/models";
+import { ConfirmationDialogComponent } from "../shared/components/confirmation-dialog/confirmation-dialog.component";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-client",
@@ -36,12 +19,41 @@ export class ClientComponent implements OnInit {
 
   public clients: Client[];
 
-  constructor(private clientService: ClientService) {
-    this.clients = clientService.getAll();
+  constructor(
+    private clientService: ClientService,
+    private dialog: MatDialog,
+    private toastr: ToastrService
+  ) {
+    this.loadClients();
+  }
+
+  public ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  private loadClients(): void {
+    this.clients = this.clientService.getAll();
     this.dataSource = new MatTableDataSource<Client>(this.clients);
   }
 
-  ngOnInit() {
-    this.dataSource.paginator = this.paginator;
+  public deleteClient(client: Client): void {
+    const dialogData: ConfirmationData = {
+      title: "Atenção",
+      message: `Deseja realmente excluir o cliente ${client.name}?`,
+      cancelLabel: "Não",
+      okLabel: "Sim"
+    };
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: "250px",
+      data: { ...dialogData }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.clientService.delete(client);
+        this.toastr.success("Cliente removido com sucesso.");
+        this.loadClients();
+      }
+    });
   }
 }

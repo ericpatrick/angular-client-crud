@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+  AfterViewChecked
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ClientService } from "../../services/client.service";
 import { Client, VehicleInfo } from "../../models";
@@ -18,10 +25,11 @@ import { ToastrService } from "ngx-toastr";
   templateUrl: "./client-form.component.html",
   styleUrls: ["./client-form.component.scss"]
 })
-export class ClientFormComponent implements OnInit {
+export class ClientFormComponent implements OnInit, AfterViewChecked {
   @ViewChild("manufecturerInput") manufecturerInput: ElementRef;
   @ViewChild("modelInput") modelInput: ElementRef;
 
+  public title: string;
   public client: Client;
   public paramsForm = {
     name: new FormControl("", [Validators.required]),
@@ -56,10 +64,12 @@ export class ClientFormComponent implements OnInit {
     private clientService: ClientService,
     private vehicleService: VehicleService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.route.params.subscribe((res) => {
       if (res.id) {
+        this.title = "Editar Cliente";
         this.client = this.clientService.get(res.id);
         const { type, manufacturer } = this.client.vehicle;
         const manufecturersPromise = this.vehicleService.getManufacturers(type).toPromise();
@@ -73,14 +83,19 @@ export class ClientFormComponent implements OnInit {
           this.spinner.hide();
         });
       } else {
+        this.title = "Adicionar cliente";
         this.client = new Client();
       }
     });
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.loadFilteredManufecturer();
     this.loadFilteredModels();
+  }
+
+  public ngAfterViewChecked(): void {
+    this.cdRef.detectChanges();
   }
 
   private loadFilteredManufecturer(): void {
