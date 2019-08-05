@@ -123,10 +123,11 @@ export class ClientFormComponent implements OnInit, AfterViewChecked {
   public submitForm(): void {
     if (this.client.id) {
       this.clientService.update(this.client);
+      this.toastr.success("Cliente atualizado com sucesso");
     } else {
       this.clientService.add(this.client);
+      this.toastr.success("Cliente cadastrado com sucesso");
     }
-    this.toastr.success("Cliente cadastrado com sucesso");
     this.router.navigate(["/"]);
   }
 

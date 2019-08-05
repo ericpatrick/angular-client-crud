@@ -1,0 +1,28 @@
+[
+  {
+    "id": "teipvkx5e",
+    "name": "Client 01",
+    "cpf": "37835635003",
+    "phone": "123456789",
+    "birthday": "06/06/2011",
+    "address": "Rua",
+    "vehicle": {
+      "type": "motos",
+      "manufacturer": { "name": "YAMAHA", "cod": "101" },
+      "model": { "name": "XVS 650 DRAG STAR", "cod": "3090" }
+    }
+  },
+  {
+    "id": "q9ja2s8ca",
+    "name": "Client 02",
+    "cpf": "26964426060",
+    "phone": "987654321",
+    "birthday": "06/07/1977",
+    "address": "Avenida",
+    "vehicle": {
+      "type": "carros",
+      "manufacturer": { "name": "Cadillac", "cod": "10" },
+      "model": { "name": "Deville/Eldorado 4.9", "cod": "258" }
+    }
+  }
+]
