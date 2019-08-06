@@ -61,36 +61,8 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Tipo do Veículo</mat-label>
-      <mat-select (selectionChange)="selectVehicleType($event)" [value]="client.vehicle.type">
-        <mat-option *ngFor="let option of vehicleTypeOptions" [value]="option.value">
-          {{option.label}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-vehicle [isEdition]="edition" [(vehicle)]="client.vehicle" fxLayout="column"></app-vehicle>
 
-    <mat-form-field *ngIf="showVehicleManufacturer">
-      <input #manufecturerInput type="text" placeholder="Fabricante" aria-label="Cliente" matInput
-        [matAutocomplete]="manufacturers" [formControl]="manufacturersInputControl">
-      <mat-autocomplete #manufacturers="matAutocomplete" (optionSelected)="vehicleManufacturerSelected($event)"
-        [displayWith]="displayInfo('manufacturer')">
-        <mat-option *ngFor="let manufacturer of filteredVehicleManufecturers | async" [value]="manufacturer">
-          {{manufacturer.name}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field *ngIf="showVehicleModels">
-      <input #modelInput type="text" placeholder="Modelo" aria-label="Modelos" matInput
-        [matAutocomplete]="models" [formControl]="modelsInputControl">
-      <mat-autocomplete #models="matAutocomplete" (optionSelected)="vehicleModelSelected($event)"
-        [displayWith]="displayInfo('model')">
-        <mat-option *ngFor="let model of filteredVehicleModels | async" [value]="model">
-          {{model.name}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
     <button mat-raised-button color="accent" (click)="submitForm()" [disabled]="!isValidForm()" fxFlexAlign="end" ngStyle.xs="width: 100%">
       <span>Salvar</span>
     </button>
