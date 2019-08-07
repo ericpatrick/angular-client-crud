@@ -1,10 +1,8 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { ClientComponent } from "./client/client.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "client", pathMatch: "full" },
-  // { path: "client", component: ClientComponent }
   { path: "client", loadChildren: "./client/client.module#ClientModule" }
 ];
 

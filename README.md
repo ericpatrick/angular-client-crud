@@ -1,27 +1,33 @@
 # AngularClientCrud
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
+Projeto para praticas com Angular. Neste está contemplado conceitos básicos do angular, juntamente com práticas de testes unitários e de integração.
 
-## Development server
+## Instalação e execução
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Para instalar as dependências do projeto execute o seguinte comando:
 
-## Code scaffolding
+`npm install`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Após isso basta rodar o comando `ng serve` para compilar e rodar o servidor. O projeto executará no endereço [http://localhost:4200](http://localhost:4200).
 
-## Build
+## Estrutura do projeto
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+A estrutura de pasta do projeto, no geral, segue o padrão já estabelecido pelo Angular. Contudo foi feito uma adição a essa estruta a fim de deixar o projeto mais organizado. Dentro da pasta `app` temos subpastas que são referentes a módulos do Angular. O módulo `shared`, em específico, é módulo responsável por reunir artefatos que são comuns a toda a aplicação. Dentro de cada módulo temos as pastas `components`, `models` e `services`. A pasta `components` contem os comoponentes do respectivo módulo, assim como `services` contem os serviços e `models` contem os modelos de domíno da aplicação.
 
-## Running unit tests
+## Compilação
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Para compilar o projeto em modo de desenvolvimento execute o comando `ng build`. O resultado da compilação estará na pasta `dist` na raiz do projeto. Esta poderá ser servida pelo seu servidor web da sua preferência.
 
-## Running end-to-end tests
+Para compilar o projeto em modo de produção basta adicionar o parâmetro `--prod` ao comando `ng build`.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Testes
 
-## Further help
+Para rodar os testes unitários basta executar o comando `ng test`. 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Para os testes de integração é necessário dois requisitos: ter o Chrome instalado na máquina onde os testes irão rodar e ter a aplicação rodando no endereço `http://localhost:4200`. Após isso basta executar o comando `npm run cypress:open`, caso queira ver os testes rodando no browser, ou `npm run cypress:run` para que os mesmos rodem em linha de comando.
+
+## Pontos de melhoria
+- Aumentar a cobertura dos testes unitários
+- Realizar testes unitários nos componentes
+- Criar testes e2e para flucos de exceção
+- Substituir o local storage pelo indexeddb

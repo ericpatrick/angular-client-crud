@@ -8,7 +8,7 @@ import { ClientService } from "./services/client.service";
 import { LocalSorageDataManagerService } from "./services/local-sorage-data-manager.service";
 import { ClientFormComponent } from "./components/client-form/client-form.component";
 import { VehicleService } from "./services/vehicle.service";
-import { VehicleComponent } from './components/client-form/components/vehicle/vehicle.component';
+import { VehicleComponent } from "./components/client-form/components/vehicle/vehicle.component";
 
 @NgModule({
   declarations: [ClientComponent, ClientFormComponent, VehicleComponent],
