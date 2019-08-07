@@ -26,6 +26,10 @@ Para rodar os testes unitários basta executar o comando `ng test`.
 
 Para os testes de integração é necessário dois requisitos: ter o Chrome instalado na máquina onde os testes irão rodar e ter a aplicação rodando no endereço `http://localhost:4200`. Após isso basta executar o comando `npm run cypress:open`, caso queira ver os testes rodando no browser, ou `npm run cypress:run` para que os mesmos rodem em linha de comando.
 
+## Ambiente de produção
+
+A aplicação está hospedada na plataforma [Netlify](https://www.netlify.com). Além de oferecer recursos para servir aplicações estáticas também é viável implementar um CI/CD por meio de comandos de pré-compilação. O endereço de acesso para a aplicação em produção é [https://angular-client-crud.netlify.com/](https://angular-client-crud.netlify.com/)
+
 ## Pontos de melhoria
 - Aumentar a cobertura dos testes unitários
 - Realizar testes unitários nos componentes
