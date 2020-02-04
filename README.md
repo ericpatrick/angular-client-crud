@@ -35,3 +35,5 @@ A aplicação está hospedada na plataforma [Netlify](https://www.netlify.com). 
 - Realizar testes unitários nos componentes
 - Criar testes e2e para fluxos de exceção
 - Substituir o local storage pelo indexeddb
+
+## Teste do netlify
