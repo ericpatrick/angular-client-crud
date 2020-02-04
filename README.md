@@ -37,3 +37,4 @@ A aplicação está hospedada na plataforma [Netlify](https://www.netlify.com). 
 - Substituir o local storage pelo indexeddb
 
 ## Teste do netlify
+Outro teste
